@@ -2,9 +2,14 @@
 
 Convenience features for Visual Studio Team Services
 
- - Project Collections
- - Projects
- - Task Groups
- - Variable Groups
+ - View project collections
+ - View projects
+ - Manage task groups (planned)
+ - Manage variable groups
+     - Rename
+     - Add variable
+     - Clone
+     - Export
+     - Import (planned)
 
-
+Demo: http://teamservicestools.azurewebsites.net
