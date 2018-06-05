@@ -1,6 +1,8 @@
 # Visual Studio Team Services Tools
 
-Convenience features for Visual Studio Team Services
+Convenience features for Visual Studio Team Services (VSTS).
+
+Managing a large number of deployments and environments in VSTS can be time-consuming. This tool set offers the ability to perform some bulk operations.
 
  - View project collections
  - View projects
