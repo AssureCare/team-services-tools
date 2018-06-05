@@ -1,0 +1,87 @@
+﻿@using TeamServicesTools.Web.Services
+@model TeamServicesTools.Web.Models.Settings.SettingsModel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+@{
+    if (ViewBag.Redirect == true)
+    {
+        <script type="text/javascript">
+            window.location = "@ViewBag.RedirectUrl";
+        </script>
+    }
+}
+
+<style type="text/css">
+    .message {
+        padding: 8px;
+    }
+</style>
+
+<h2>Edit</h2>
+
+@{
+    if (Session["Message"] != null)
+    {
+        var message = Session["Message"];
+        Session.Remove("Message");
+        <div class="alert-info message">@message</div>
+    }
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        
+        <br/>
+
+        <p>Settings are encrypted and stored in a session cookie. Settings are never stored on the server.</p>
+
+        <br/>
+
+        <hr/>
+        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+        <div class="form-group">
+            @Html.LabelFor(model => model.AccountName, htmlAttributes: new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AccountName, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.AccountName, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PersonalAccessToken, htmlAttributes: new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @if (SettingsService.IsConfigured)
+                {
+                    @Html.TextBox("PersonalAccessToken", "", new {@class = "form-control"})
+                }
+                else
+                {
+                    @Html.EditorFor(model => model.PersonalAccessToken, new {htmlAttributes = new {@class = "form-control"}})
+                }
+                @Html.ValidationMessageFor(model => model.PersonalAccessToken, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-primary"/>
+            </div>
+        </div>
+    </div>
+}
+
+
+<br />
+<br />
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

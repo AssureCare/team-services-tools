@@ -1,0 +1,39 @@
+﻿@model TeamServicesTools.Web.Models.TaskGroups.TaskGroupsModel
+
+@{
+    ViewBag.Title = $"{Model.ProjectName} Task Groups";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@Html.ActionLink($"{Model.ProjectName} Project", "Project", "Projects", new { projectGuid = Model.ProjectGuid }, null)
+
+<br/>
+<br/>
+
+<table class="table">
+    <tr>
+        <th>
+            Name
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>*@
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.Groups) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        @*<td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>*@
+        <td>
+            @*@Html.ActionLink("Clone", "Index", new {}, null)*@
+        </td>
+    </tr>
+}
+
+</table>

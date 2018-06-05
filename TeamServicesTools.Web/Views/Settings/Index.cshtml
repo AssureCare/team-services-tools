@@ -1,0 +1,32 @@
+﻿@model TeamServicesTools.Web.Models.Settings.SettingsModel
+
+@{
+    ViewBag.Title = "Settings";
+}
+
+<h2>Settings</h2>
+
+@Html.ActionLink("Edit", "Edit", "Settings")
+
+<div class="form-horizontal">
+    
+    <br/>
+
+    <hr />
+    <div class="form-group">
+        @Html.LabelFor(model => model.AccountName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DisplayFor(model => model.AccountName, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.PersonalAccessToken, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DisplayFor(model => model.MaskedPersonalAccessToken, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+</div>
+
+<br />
+<br />

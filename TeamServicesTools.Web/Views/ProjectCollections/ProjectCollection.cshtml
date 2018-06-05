@@ -1,0 +1,13 @@
+﻿@model Microsoft.TeamFoundation.Core.WebApi.TeamProjectCollectionReference
+
+@{
+    ViewBag.Title = $"{Model.Name} Project Collection";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+<br />
+<br />
+
+See @Html.ActionLink("Projects", "Index", "Projects")

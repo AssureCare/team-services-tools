@@ -1,0 +1,137 @@
+﻿@using System.Web.Mvc.Html
+@using TeamServicesTools.Web.Models.VariableGroups
+@model TeamServicesTools.Web.Models.VariableGroups.ComparisonModel
+
+@{
+    ViewBag.Title = "Compare Variable Groups";
+}
+
+<style type="text/css">
+
+    table.results {
+    }
+
+    table.results td {
+        max-width: 50vw;
+        text-overflow: clip;
+        word-break: break-all;
+    }
+
+    .value {
+        font-family: monospace;
+        font-size: smaller;
+    }
+
+    .inline {
+        display: inline-block;
+    }
+</style>
+
+<h2>@ViewBag.Title</h2>
+
+@Html.ActionLink($"{ViewBag.ProjectName} Project", "Index", "Projects", new { }, null)
+
+<br />
+<br />
+
+
+
+@using (Html.BeginForm("Compare", "VariableGroups", FormMethod.Get))
+{
+
+    <h4>Group 1</h4>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Project</label>
+        <div class="col-md-10">
+            @Html.DropDownList("project1Guid", Model.Group1Projects, new { @class = "form-control", onchange = "this.form.submit()" })
+        </div>
+    </div>
+
+    if (Model.Project1Groups != null)
+    {
+        <br />
+        <br />
+        <div class="form-group">
+            <label class="control-label col-md-2">Group</label>
+            <div class="col-md-10">
+                @Html.DropDownList("group1Id", Model.Project1Groups, new { @class = "form-control", onchange = "this.form.submit()" })
+            </div>
+        </div>
+    }
+
+    <br />
+    <br />
+
+    <h4>Group 2</h4>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Project</label>
+        <div class="col-md-10">
+            @Html.DropDownList("project2Guid", Model.Group2Projects, new { @class = "form-control", onchange = "this.form.submit()" })
+        </div>
+    </div>
+
+    if (Model.Project2Groups != null)
+    {
+        <br />
+        <br />
+        <div class="form-group">
+            <label class="control-label col-md-2">Group</label>
+            <div class="col-md-10">
+                @Html.DropDownList("group2Id", Model.Project2Groups, new { @class = "form-control", onchange = "this.form.submit()" })
+            </div>
+        </div>
+    }
+
+}
+
+
+@if (Model.Results != null)
+{
+
+    <br />
+
+    <h3>Results</h3>
+
+    <br />
+
+    <table class="table results">
+        <tr></tr>
+
+        @foreach (var item in Model.Results)
+        {
+            var cssClass = "";
+            switch (item.State)
+            {
+                case ComparisonState.Same:
+                    cssClass = "alert-success";
+                    break;
+                case ComparisonState.Different:
+                    cssClass = "alert-warning";
+                    break;
+                case ComparisonState.Group1Only:
+                    cssClass = "alert-danger";
+                    break;
+                case ComparisonState.Group2Only:
+                    cssClass = "alert-danger";
+                    break;
+                default:
+                    break;
+            }
+
+            <tr>
+                <th>@item.Key</th>
+                <th>@item.State</th>
+            </tr>
+            <tr>
+                <td class="@cssClass value">@item.Group1Value</td>
+                <td class="@cssClass value">@item.Group2Value</td>
+            </tr>
+        }
+
+    </table>
+}
+
+<br />
+<br />

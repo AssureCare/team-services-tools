@@ -1,0 +1,191 @@
+﻿@model TeamServicesTools.Web.Models.VariableGroups.VariableGroupsModel
+
+@{
+    ViewBag.Title = $"{Model.ProjectName} Variable Groups";
+}
+
+<style type="text/css">
+    input[type=search] {
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function getCheckedGroupIds() {
+        return $('input[type=checkbox]:checked').map(function () { return this.id.split('_')[1] }).get();
+    }
+
+    function exportGroups() {
+        var ids = getCheckedGroupIds();
+
+        if (ids.length === 0) {
+            alert('Select at least one group to export.');
+            return;
+        }
+
+        $("#export-groupIds").val(ids);
+        $('#export-form').submit();
+    }
+
+    function renameGroups() {
+        var ids = getCheckedGroupIds();
+
+        if (ids.length === 0) {
+            alert('Select at least one group to rename.');
+            return;
+        }
+
+        $("#rename-groupIds").val(ids);
+        $('#rename-form').submit();
+    }
+
+    function cloneGroups() {
+        var ids = getCheckedGroupIds();
+
+        if (ids.length === 0) {
+            alert('Select at least one group to clone.');
+            return;
+        }
+
+        $("#clone-groupIds").val(ids);
+        $('#clone-form').submit();
+    }
+
+    function addVariableToGroups() {
+        var ids = getCheckedGroupIds();
+
+        if (ids.length === 0) {
+            alert('Select at least one group to which a variable should be added.');
+            return;
+        }
+
+        $("#add-variable-groupIds").val(ids);
+        $('#add-variable-form').submit();
+    }
+
+    function selectAll() {
+        $('input[type=checkbox]:visible').prop('checked', 'checked');
+        configureBulkActionsButton();
+    }
+
+    function selectNone() {
+        $('input[type=checkbox]').prop('checked', '');
+        configureBulkActionsButton();
+    }
+
+    function configureBulkActionsButton() {
+        var ids = getCheckedGroupIds();
+        if (ids.length > 0) {
+            $('#dropdownMenuButton').removeClass('disabled');
+        } else {
+            $('#dropdownMenuButton').addClass('disabled');
+        }
+    }
+
+</script>
+
+<form id="export-form" action="@Url.Action("Export")" method="post">
+    <input type="hidden" name="projectGuid" value="@Model.ProjectGuid" id="export-projectGuid" />
+    <input type="hidden" name="projectName" value="@Model.ProjectName" />
+    <input type="hidden" name="groupIds" value="" id="export-groupIds" />
+</form>
+
+<form id="rename-form" action="@Url.Action("Rename")" method="get">
+    <input type="hidden" name="projectGuid" value="@Model.ProjectGuid" />
+    <input type="hidden" name="projectName" value="@Model.ProjectName" />
+    <input type="hidden" name="groupIds" value="" id="rename-groupIds" />
+</form>
+
+<form id="clone-form" action="@Url.Action("Clone")" method="get">
+    <input type="hidden" name="projectGuid" value="@Model.ProjectGuid" />
+    <input type="hidden" name="projectName" value="@Model.ProjectName" />
+    <input type="hidden" name="groupIds" value="" id="clone-groupIds" />
+</form>
+
+<form id="add-variable-form" action="@Url.Action("AddVariable")" method="get">
+    <input type="hidden" name="projectGuid" value="@Model.ProjectGuid" />
+    <input type="hidden" name="projectName" value="@Model.ProjectName" />
+    <input type="hidden" name="groupIds" value="" id="add-variable-groupIds" />
+</form>
+
+<h2>@ViewBag.Title</h2>
+
+@Html.ActionLink($"All Projects", "Index", "Projects", new { }, null)
+&nbsp;|&nbsp;
+@Html.ActionLink("Compare Groups", "Compare", new { }, null)
+
+<br />
+<br />
+
+<div class="dropdown" id="action-dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Group Actions
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="renameGroups()">Rename</a></li>
+        <li class="divider">&nbsp;</li>
+        <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="cloneGroups()">Clone</a></li>
+        <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="addVariableToGroups()">Add Variable</a></li>
+        <li class="divider">&nbsp;</li>
+        <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="exportGroups()">Export</a></li>
+    </ul>
+</div>
+
+<br />
+
+Select
+<a href="javascript:void(0)" onclick="selectAll()">All</a>
+|
+<a href="javascript:void(0)" onclick="selectNone()">None</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Variables</th>
+            <th>Created By</th>
+            <th>Created On</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.Groups)
+        {
+            <tr>
+                <td>
+                    @Html.CheckBox($"Checked_{item.Id}", false, new { @class = "checkbox", onchange = "configureBulkActionsButton()" })
+                </td>
+                <td>
+                    @Html.ActionLink(item.Name, "VariableGroup", new { projectGuid = Model.ProjectGuid, projectName = Model.ProjectName, groupId = item.Id })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Variables.Keys.Count)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedBy.DisplayName)
+                </td>
+                <td>
+                    @item.CreatedOn.ToShortDateString()
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('table').DataTable({
+            "paging": false
+        });
+        configureBulkActionsButton();
+    });
+
+</script>
+

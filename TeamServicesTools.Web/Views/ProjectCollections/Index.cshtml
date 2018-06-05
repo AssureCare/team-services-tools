@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Microsoft.TeamFoundation.Core.WebApi.TeamProjectCollectionReference>
+
+@{
+    ViewBag.Title = "Project Collections";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<br/>
+<br/>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink(item.Name, "ProjectCollection", new { projectCollectionGuid = item.Id })
+        </td>
+    </tr>
+}
+
+</table>

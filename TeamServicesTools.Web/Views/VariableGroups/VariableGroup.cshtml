@@ -1,0 +1,128 @@
+﻿@model TeamServicesTools.Web.Models.VariableGroups.VariableGroupModel
+
+@{
+    ViewBag.Title = $"{Model.Group.Name}";
+}
+
+<style type="text/css">
+    input[type=search] {
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
+
+    table td {
+        max-width: 50vw;
+        text-overflow: clip;
+        word-break: break-all;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function getCheckedGroupIds() {
+        return $('input[type=checkbox]:checked').map(function () { return this.id.split('_')[1] }).get();
+    }
+
+    function selectAll() {
+        $('input[type=checkbox]:visible').prop('checked', 'checked');
+        configureBulkActionsButton();
+    }
+
+    function selectNone() {
+        $('input[type=checkbox]').prop('checked', '');
+        configureBulkActionsButton();
+    }
+
+    function configureBulkActionsButton() {
+        var ids = getCheckedGroupIds();
+        if (ids.length > 0) {
+            $('#dropdownMenuButton').removeClass('disabled');
+        } else {
+            $('#dropdownMenuButton').addClass('disabled');
+        }
+    }
+
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+@Html.ActionLink($"{Model.ProjectName} Variable Groups", "Index", "VariableGroups", new { projectGuid = Model.ProjectGuid, projectName = Model.ProjectName }, null)
+&nbsp;|&nbsp;
+@Html.ActionLink("Compare Groups", "Compare", new { }, null)
+
+<br />
+<br />
+
+@*<div class="dropdown" id="action-dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Group Actions
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="renameGroups()">Rename</a></li>
+            <li class="divider">&nbsp;</li>
+            <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="cloneGroups()">Clone</a></li>
+            <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="addVariableToGroups()">Add Variable</a></li>
+            <li class="divider">&nbsp;</li>
+            <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="exportGroups()">Export</a></li>
+        </ul>
+    </div>*@
+
+<br />
+
+Select
+<a href="javascript:void(0)" onclick="selectAll()">All</a>
+|
+<a href="javascript:void(0)" onclick="selectNone()">None</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Key</th>
+            <th>Value</th>
+            <th>Secret</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.Group.Variables.OrderBy(v => v.Key))
+        {
+            <tr>
+                <td>
+                    @Html.CheckBox($"Checked_{item.Key.Replace(".", "")}", false, new { @class = "checkbox", onchange = "configureBulkActionsButton()" })
+                </td>
+                <td style="white-space: nowrap;">
+                    @Html.DisplayFor(modelItem => item.Key)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value.Value)
+                </td>
+                <td>
+                    @if (item.Value.IsSecret)
+                    {
+                        <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                    }
+                    else
+                    {
+
+                    }
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('table').DataTable({
+            "paging": false
+        });
+        configureBulkActionsButton();
+    });
+
+</script>
+

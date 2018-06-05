@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Microsoft.TeamFoundation.Core.WebApi.TeamProjectReference>
+
+@{
+    ViewBag.Title = "Projects";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<br />
+<br />
+
+<table class="table">
+    <tr>
+        <th style="width: 65%;">Name</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>
+            @Html.ActionLink(item.Name, "Project", new { projectGuid = item.Id })
+        </td>
+        <td>
+            @Html.ActionLink("Task Groups", "Index", "TaskGroups", new { projectGuid = item.Id, projectName = item.Name }, null)
+            &nbsp;|&nbsp;
+            @Html.ActionLink("Variable Groups", "Index", "VariableGroups", new { projectGuid = item.Id, projectName = item.Name }, null)
+            &nbsp;|&nbsp;
+            <a href="@item.Url" target="_blank">View in VSTS</a>
+        </td>
+    </tr>
+    }
+
+</table>

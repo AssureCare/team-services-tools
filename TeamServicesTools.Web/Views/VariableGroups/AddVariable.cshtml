@@ -1,0 +1,66 @@
+﻿@model TeamServicesTools.Web.Models.VariableGroups.AddVariableModel
+
+@{
+    ViewBag.Title = $"Add Variable to {ViewBag.ProjectName} Groups";
+}
+
+<style type="text/css">
+    .form-group {
+        padding: 20px;
+    }
+</style>
+
+<h2>@ViewBag.Title</h2>
+
+@Html.ActionLink($"{Model.ProjectName} Variable Groups", "Index", "VariableGroups", new { projectGuid = Model.ProjectGuid, projectName = Model.ProjectName }, null)
+
+<br />
+<br />
+
+<form action="@Url.Action("AddVariable")" method="post">
+    <input type="hidden" name="action" value="clone" />
+    <input type="hidden" name="projectGuid" value="@Model.ProjectGuid" />
+    <input type="hidden" name="groupIds" value="@string.Join(",", Model.GroupIds)" />
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Key, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Key, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Key, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Value, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Value, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Value, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.IsSecret, new { htmlAttributes = new { } })
+            @Html.ValidationMessageFor(model => model.IsSecret, "", new { @class = "text-danger" })
+            <label for="IsSecret">This value is secret</label>
+        </div>
+    </div>
+
+
+    <div style="padding: 20px 15px; clear: both;">
+        <br />
+        This variable will be added to the following groups:
+        <ul style="padding-top: 10px;">
+            @foreach (var item in Model.Groups)
+            {
+                <li>@item.Name</li>
+            }
+        </ul>
+    </div>
+
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+
+</form>

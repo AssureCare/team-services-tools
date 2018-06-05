@@ -1,0 +1,53 @@
+﻿@model TeamServicesTools.Web.Models.VariableGroups.RenameModel
+
+@{
+    ViewBag.Title = $"Rename {ViewBag.ProjectName} Variable Groups";
+}
+
+<style type="text/css">
+    input[type=text] {
+        max-width: inherit;
+    }
+</style>
+
+
+<h2>@ViewBag.Title</h2>
+
+@Html.ActionLink($"{Model.ProjectName} Variable Groups", "Index", "VariableGroups", new { projectGuid = Model.ProjectGuid, projectName = Model.ProjectName }, null)
+
+<br />
+<br />
+
+<form id="export-form" action="@Url.Action("Rename")" method="post">
+    <input type="hidden" name="action" value="rename" />
+    <input type="hidden" name="projectGuid" value="@Model.ProjectGuid" />
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="width: 45%;">Existing Name</th>
+                <th>New Name</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model.Groups)
+            {
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @Html.TextBox($"groupName_{item.Id}", item.Name, new { @class = "form-control" })
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+
+</form>
