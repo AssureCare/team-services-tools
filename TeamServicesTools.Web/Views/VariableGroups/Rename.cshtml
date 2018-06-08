@@ -13,14 +13,13 @@
 
 <h2>@ViewBag.Title</h2>
 
-@Html.ActionLink($"{Model.ProjectName} Variable Groups", "Index", "VariableGroups", new { projectGuid = Model.ProjectGuid, projectName = Model.ProjectName }, null)
+@Html.ActionLink($"{Model.ProjectName} Variable Groups", "Index", "VariableGroups", new { Model.ProjectGuid, Model.ProjectName }, null)
 
 <br />
 <br />
 
 <form id="export-form" action="@Url.Action("Rename")" method="post">
-    <input type="hidden" name="action" value="rename" />
-    <input type="hidden" name="projectGuid" value="@Model.ProjectGuid" />
+    <input type="hidden" name="ProjectGuid" value="@Model.ProjectGuid" />
 
     <table class="table">
         <thead>

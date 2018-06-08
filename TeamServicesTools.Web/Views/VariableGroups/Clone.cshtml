@@ -12,19 +12,18 @@
 
 <h2>@ViewBag.Title</h2>
 
-@Html.ActionLink($"{Model.ProjectName} Variable Groups", "Index", "VariableGroups", new { projectGuid = Model.ProjectGuid, projectName = Model.ProjectName }, null)
+@Html.ActionLink($"{Model.ProjectName} Variable Groups", "Index", "VariableGroups", new { Model.ProjectGuid, Model.ProjectName }, null)
 
 <br />
 <br />
 
 <form id="export-form" action="@Url.Action("Clone")" method="post">
-    <input type="hidden" name="action" value="clone" />
-    <input type="hidden" name="sourceProjectGuid" value="@Model.ProjectGuid" />
+    <input type="hidden" name="SourceProjectGuid" value="@Model.ProjectGuid" />
 
     <div class="form-group">
         <label class="control-label col-md-2">Target Project</label>
         <div class="col-md-10">
-            @Html.DropDownList("targetProjectGuid", Model.Projects, new { @class = "form-control" })
+            @Html.DropDownList("TargetProjectGuid", Model.Projects, new { @class = "form-control" })
         </div>
     </div>
 

@@ -1,18 +1,18 @@
-﻿@model Microsoft.TeamFoundation.Core.WebApi.TeamProjectReference
+﻿@model TeamServicesTools.Web.Models.Projects.ProjectModel
 
 @{
-    ViewBag.Title = $"{Model.Name} Project";
+    ViewBag.Title = $"{Model.Project.Name} Project";
 }
 
 <h2>@ViewBag.Title</h2>
 
-<div>@Model.Description</div>
+<div>@(Model.Project.Description ?? "No description")</div>
 
 <br />
 <br />
 
 <ul>
-    <li>@Html.ActionLink("Task Groups", "Index", "TaskGroups", new { projectGuid = Model.Id, projectName = Model.Name }, null)</li>
-    <li>@Html.ActionLink("Variable Groups", "Index", "VariableGroups", new { projectGuid = Model.Id, projectName = Model.Name }, null)</li>
-    <li><a href="@Model.Url" target="_blank">View in VSTS</a></li>
+    <li>@Html.ActionLink("Task Groups", "Index", "TaskGroups", new { ProjectGuid = Model.Project.Id, ProjectName = Model.Project.Name }, null)</li>
+    <li>@Html.ActionLink("Variable Groups", "Index", "VariableGroups", new { ProjectGuid = Model.Project.Id, ProjectName = Model.Project.Name }, null)</li>
+    <li><a href="@Model.Project.Url" target="_blank">View in VSTS</a></li>
 </ul>

@@ -295,14 +295,19 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProjectCollections\ProjectCollectionModel.cs" />
+    <Compile Include="Models\Projects\ProjectModel.cs" />
     <Compile Include="Models\Settings\SettingsModel.cs" />
     <Compile Include="Models\TaskGroups\TaskGroupsModel.cs" />
+    <Compile Include="Models\VariableGroups\AddGroupModel.cs" />
     <Compile Include="Models\VariableGroups\AddVariableModel.cs" />
+    <Compile Include="Models\VariableGroups\BaseVariableGroupModel.cs" />
     <Compile Include="Models\VariableGroups\Comparer.cs" />
-    <Compile Include="Models\VariableGroups\ComparisonModel.cs" />
+    <Compile Include="Models\VariableGroups\CompareModel.cs" />
     <Compile Include="Models\VariableGroups\ComparisonResult.cs" />
     <Compile Include="Models\VariableGroups\ComparisonState.cs" />
     <Compile Include="Models\VariableGroups\CloneModel.cs" />
+    <Compile Include="Models\VariableGroups\ExportModel.cs" />
     <Compile Include="Models\VariableGroups\RenameModel.cs" />
     <Compile Include="Models\VariableGroups\VariableGroupModel.cs" />
     <Compile Include="Models\VariableGroups\VariableGroupsModel.cs" />
@@ -405,6 +410,7 @@
     <Content Include="Views\ProjectCollections\ProjectCollection.cshtml" />
     <Content Include="Views\VariableGroups\AddVariable.cshtml" />
     <Content Include="Views\VariableGroups\VariableGroup.cshtml" />
+    <Content Include="Views\VariableGroups\AddGroup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

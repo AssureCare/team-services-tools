@@ -12,15 +12,14 @@
 
 <h2>@ViewBag.Title</h2>
 
-@Html.ActionLink($"{Model.ProjectName} Variable Groups", "Index", "VariableGroups", new { projectGuid = Model.ProjectGuid, projectName = Model.ProjectName }, null)
+@Html.ActionLink($"{Model.ProjectName} Variable Groups", "Index", "VariableGroups", new { ProjectGuid = Model.ProjectGuid, ProjectName = Model.ProjectName }, null)
 
 <br />
 <br />
 
 <form action="@Url.Action("AddVariable")" method="post">
-    <input type="hidden" name="action" value="clone" />
-    <input type="hidden" name="projectGuid" value="@Model.ProjectGuid" />
-    <input type="hidden" name="groupIds" value="@string.Join(",", Model.GroupIds)" />
+    <input type="hidden" name="ProjectGuid" value="@Model.ProjectGuid" />
+    <input type="hidden" name="GroupIdList" value="@string.Join(",", Model.GroupIds)" />
 
     <div class="form-group">
         @Html.LabelFor(model => model.Key, htmlAttributes: new { @class = "control-label col-md-2" })

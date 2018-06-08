@@ -5,12 +5,13 @@ using Microsoft.TeamFoundation.DistributedTask.WebApi;
 
 namespace TeamServicesTools.Web.Models.VariableGroups
 {
-    public class CloneModel
+    public class CloneModel : BaseVariableGroupModel
     {
-        public Guid ProjectGuid { get; set; }
+        public Guid? ProjectGuid { get; set; }
         public string ProjectName { get; set; }
-        public int[] GroupIds { get; set; }
         public IEnumerable<VariableGroup> Groups { get; set; }
         public List<SelectListItem> Projects { get; set; }
+        public Guid? SourceProjectGuid { get; set; }
+        public Guid? TargetProjectGuid { get; set; }
     }
 }

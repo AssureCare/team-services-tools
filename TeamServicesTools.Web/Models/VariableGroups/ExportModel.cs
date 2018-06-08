@@ -4,7 +4,7 @@ using Microsoft.TeamFoundation.DistributedTask.WebApi;
 
 namespace TeamServicesTools.Web.Models.VariableGroups
 {
-    public class VariableGroupsModel
+    public class ExportModel : BaseVariableGroupModel
     {
         public Guid? ProjectGuid { get; set; }
         public string ProjectName { get; set; }

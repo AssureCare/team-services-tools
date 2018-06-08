@@ -1,0 +1,36 @@
+﻿@model TeamServicesTools.Web.Models.VariableGroups.AddGroupModel
+
+@{
+    ViewBag.Title = $"Add Variable Group to {ViewBag.ProjectName}";
+}
+
+<style type="text/css">
+    .form-group {
+        padding: 20px;
+    }
+</style>
+
+<h2>@ViewBag.Title</h2>
+
+@Html.ActionLink($"{Model.ProjectName} Variable Groups", "Index", "VariableGroups", new { ProjectGuid = Model.ProjectGuid, ProjectName = Model.ProjectName }, null)
+
+<br />
+<br />
+
+<form action="@Url.Action("AddVariable")" method="post">
+    <input type="hidden" name="ProjectGuid" value="@Model.ProjectGuid" />
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.GroupName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.GroupName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.GroupName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+
+</form>

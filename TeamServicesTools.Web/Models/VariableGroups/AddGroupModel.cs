@@ -1,13 +1,11 @@
 ﻿using System;
-using Microsoft.TeamFoundation.DistributedTask.WebApi;
 
 namespace TeamServicesTools.Web.Models.VariableGroups
 {
-    public class VariableGroupModel
+    public class AddGroupModel
     {
         public Guid? ProjectGuid { get; set; }
         public string ProjectName { get; set; }
-        public VariableGroup Group { get; set; }
-        public int? GroupId { get; set; }
+        public string GroupName { get; set; }
     }
 }

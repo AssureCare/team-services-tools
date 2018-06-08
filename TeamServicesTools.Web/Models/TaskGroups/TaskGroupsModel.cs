@@ -6,7 +6,7 @@ namespace TeamServicesTools.Web.Models.TaskGroups
 {
     public class TaskGroupsModel
     {
-        public Guid ProjectGuid { get; set; }
+        public Guid? ProjectGuid { get; set; }
         public string ProjectName { get; set; }
         public IEnumerable<TaskGroup> Groups { get; set; }
     }

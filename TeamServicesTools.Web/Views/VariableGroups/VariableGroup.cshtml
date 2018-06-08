@@ -47,7 +47,7 @@
 
 <h2>@ViewBag.Title</h2>
 
-@Html.ActionLink($"{Model.ProjectName} Variable Groups", "Index", "VariableGroups", new { projectGuid = Model.ProjectGuid, projectName = Model.ProjectName }, null)
+@Html.ActionLink($"{Model.ProjectName} Variable Groups", "Index", "VariableGroups", new { ProjectGuid = Model.ProjectGuid, ProjectName = Model.ProjectName }, null)
 &nbsp;|&nbsp;
 @Html.ActionLink("Compare Groups", "Compare", new { }, null)
 

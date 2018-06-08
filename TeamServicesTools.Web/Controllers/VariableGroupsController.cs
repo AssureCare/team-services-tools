@@ -14,125 +14,99 @@ namespace TeamServicesTools.Web.Controllers
     public class VariableGroupsController : Controller
     {
         [TokenRequired]
-        public async Task<ActionResult> Index(Guid? projectGuid, string projectName)
+        public async Task<ActionResult> Index(VariableGroupsModel model)
         {
-            if (!projectGuid.HasValue)
+            if (!model.ProjectGuid.HasValue)
                 return Redirect("/Home");
 
-            var model = new VariableGroupsModel
-            {
-                ProjectGuid = projectGuid.GetValueOrDefault(),
-                ProjectName = projectName,
-                Groups = await VariableGroupService.GetVariableGroupsAsync(projectGuid.GetValueOrDefault())
-            };
+            model.Groups = await VariableGroupService.GetVariableGroupsAsync(model.ProjectGuid.GetValueOrDefault());
 
             return View(model);
         }
 
         [TokenRequired]
-        public async Task<ActionResult> VariableGroup(Guid? projectGuid, string projectName, int groupId)
+        public async Task<ActionResult> VariableGroup(VariableGroupModel model)
         {
-            if (!projectGuid.HasValue)
+            if (!model.ProjectGuid.HasValue)
                 return Redirect("/Home");
 
-            var model = new VariableGroupModel
-            {
-                ProjectGuid = projectGuid.GetValueOrDefault(),
-                ProjectName = projectName,
-                Group = await VariableGroupService.GetVariableGroupAsync(projectGuid.GetValueOrDefault(), groupId)
-            };
+            model.Group = await VariableGroupService.GetVariableGroupAsync(
+                model.ProjectGuid.GetValueOrDefault(), model.GroupId.GetValueOrDefault());
 
             return View(model);
         }
 
         [TokenRequired]
-        public async Task<ActionResult> Clone(Guid? projectGuid, string groupIds, string projectName)
+        public async Task<ActionResult> Clone(CloneModel model)
         {
-            if (!projectGuid.HasValue)
+            if (!model.ProjectGuid.HasValue)
                 return Redirect("/Home");
 
-            var ids = groupIds.Split(',').Select(t => Convert.ToInt32(t));
+            model.Groups = (await VariableGroupService.GetVariableGroupsAsync(model.ProjectGuid.GetValueOrDefault()))
+                .Where(g => model.GroupIds.Contains(g.Id));
 
-            var model = new CloneModel
-            {
-                ProjectGuid = projectGuid.GetValueOrDefault(),
-                ProjectName = projectName,
-                GroupIds = groupIds.Split(',').Select(t => Convert.ToInt32(t)).ToArray(),
-                Groups = (await VariableGroupService.GetVariableGroupsAsync(projectGuid.GetValueOrDefault()))
-                    .Where(g => ids.Contains(g.Id)),
-                Projects = await GetProjectsSelectListItems(Guid.Empty)
-            };
+            model.Projects = await GetProjectsSelectListItems(Guid.Empty);
 
             return View(model);
         }
 
-        [TokenRequired, HttpPost]
-        public async Task<ActionResult> Clone(Guid? sourceProjectGuid, Guid? targetProjectGuid, string groupIds, string action)
+        [TokenRequired, HttpPost, ActionName("Clone")]
+        public async Task<ActionResult> Clone_Post(CloneModel model)
         {
-            if (!sourceProjectGuid.HasValue)
+            if (!model.SourceProjectGuid.HasValue)
                 return Redirect("/Home");
 
             foreach (var id in GetFormGroupIdList(Request.Form, "groupName"))
-                await VariableGroupService.CloneGroup(sourceProjectGuid.GetValueOrDefault(), id, 
-                    targetProjectGuid.GetValueOrDefault(), Request.Form[$"groupName_{id}"]);
+                await VariableGroupService.CloneGroup(model.SourceProjectGuid.GetValueOrDefault(), id,
+                    model.TargetProjectGuid.GetValueOrDefault(), Request.Form[$"groupName_{id}"]);
 
-            var projectName = (await ProjectService.GetProjectAsync(targetProjectGuid.GetValueOrDefault())).Name;
+            var projectName = (await ProjectService.GetProjectAsync(model.TargetProjectGuid.GetValueOrDefault())).Name;
 
-            return Redirect($"/VariableGroups?projectGuid={targetProjectGuid}&projectName={projectName}");
+            return Redirect($"/VariableGroups?ProjectGuid={model.TargetProjectGuid}&ProjectName={projectName}");
         }
 
         [TokenRequired]
-        public async Task<ActionResult> Rename(Guid? projectGuid, string groupIds, string projectName)
+        public async Task<ActionResult> Rename(RenameModel model)
         {
-            if (!projectGuid.HasValue)
+            if (!model.ProjectGuid.HasValue)
                 return Redirect("/Home");
 
-            var ids = groupIds.Split(',').Select(t => Convert.ToInt32(t));
-
-            var model = new RenameModel
-            {
-                ProjectGuid = projectGuid.GetValueOrDefault(),
-                ProjectName = projectName,
-                GroupIds = groupIds.Split(',').Select(t => Convert.ToInt32(t)).ToArray(),
-                Groups = (await VariableGroupService.GetVariableGroupsAsync(projectGuid.GetValueOrDefault()))
-                    .Where(g => ids.Contains(g.Id))
-            };
+            model.Groups = (await VariableGroupService.GetVariableGroupsAsync(model.ProjectGuid.GetValueOrDefault()))
+                .Where(g => model.GroupIds.Contains(g.Id));
 
             return View(model);
         }
 
-        [TokenRequired, HttpPost]
-        public async Task<ActionResult> Rename(Guid? projectGuid, string groupIds)
+        [TokenRequired, HttpPost, ActionName("Rename")]
+        public async Task<ActionResult> Rename_Post(RenameModel model)
         {
-            if (!projectGuid.HasValue)
+            if (!model.ProjectGuid.HasValue)
                 return Redirect("/Home");
 
             foreach (var id in GetFormGroupIdList(Request.Form, "groupName"))
-                await VariableGroupService.RenameGroup(projectGuid.GetValueOrDefault(), id, Request.Form[$"groupName_{id}"]);
+                await VariableGroupService.RenameGroup(model.ProjectGuid.GetValueOrDefault(), id, Request.Form[$"groupName_{id}"]);
 
-            var projectName = (await ProjectService.GetProjectAsync(projectGuid.GetValueOrDefault())).Name;
+            var projectName = (await ProjectService.GetProjectAsync(model.ProjectGuid.GetValueOrDefault())).Name;
 
-            return Redirect($"/VariableGroups?projectGuid={projectGuid}&projectName={projectName}");
+            return Redirect($"/VariableGroups?ProjectGuid={model.ProjectGuid}&ProjectName={projectName}");
         }
 
         [TokenRequired, HttpPost]
-        public async Task<ActionResult> Export(Guid projectGuid, string groupIds)
+        public async Task<ActionResult> Export(ExportModel model)
         {
-            var ids = groupIds.Split(',').Select(t => Convert.ToInt32(t));
-            var projectName = (await ProjectService.GetProjectAsync(projectGuid)).Name;
+            model.ProjectName = (await ProjectService.GetProjectAsync(model.ProjectGuid.GetValueOrDefault())).Name;
 
             var directory1 = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-
             Directory.CreateDirectory(directory1);
 
-            foreach (var groupId in ids)
+            foreach (var groupId in model.GroupIds)
             {
-                var group = await VariableGroupService.GetVariableGroupAsync(projectGuid, Convert.ToInt32(groupId));
+                var group = await VariableGroupService.GetVariableGroupAsync(model.ProjectGuid.GetValueOrDefault(), Convert.ToInt32(groupId));
                 var file = $"{RemoveInvalidFileCharacters(group.Name)}.json";
                 System.IO.File.WriteAllText(Path.Combine(directory1, file), JsonConvert.SerializeObject(group, Formatting.Indented));
             }
 
-            var friendlyFileName = $"{projectName.Replace(" ", "-")}_VariableGroups_{DateTime.Now:yyyy-MM-dd_HH-mm}.zip";
+            var friendlyFileName = $"{model.ProjectName.Replace(" ", "-")}_VariableGroups_{DateTime.Now:yyyy-MM-dd_HH-mm}.zip";
             var archive = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             System.IO.Compression.ZipFile.CreateFromDirectory(directory1, archive);
 
@@ -150,28 +124,21 @@ namespace TeamServicesTools.Web.Controllers
         }
 
         [TokenRequired]
-        public async Task<ActionResult> Compare(Guid? project1Guid, int? group1Id, Guid? project2Guid, int? group2Id)
+        public async Task<ActionResult> Compare(CompareModel model)
         {
-            var model = new ComparisonModel
+            model.Group1Projects = await GetProjectsSelectListItems(model.Project1Guid.GetValueOrDefault());
+            model.Group2Projects = await GetProjectsSelectListItems(model.Project2Guid.GetValueOrDefault());
+
+            if (model.Project1Guid.HasValue)
+                model.Project1Groups = await GetVariableGroupsSelectListItems(model.Project1Guid.Value, model.Group1Id.GetValueOrDefault());
+
+            if (model.Project2Guid.HasValue)
+                model.Project2Groups = await GetVariableGroupsSelectListItems(model.Project2Guid.GetValueOrDefault(), model.Group2Id.GetValueOrDefault());
+
+            if (model.Group1Id.HasValue && model.Group2Id.HasValue)
             {
-                Group1Projects = await GetProjectsSelectListItems(project1Guid.GetValueOrDefault()),
-                Group2Projects = await GetProjectsSelectListItems(project2Guid.GetValueOrDefault()),
-                Project1Guid = project1Guid.GetValueOrDefault(),
-                Group1Id = group1Id.GetValueOrDefault(),
-                Project2Guid = project2Guid.GetValueOrDefault(),
-                Group2Id = group2Id.GetValueOrDefault()
-            };
-
-            if (project1Guid.HasValue)
-                model.Project1Groups = await GetVariableGroupsSelectListItems(model.Project1Guid, group1Id.GetValueOrDefault());
-
-            if (project2Guid.HasValue)
-                model.Project2Groups = await GetVariableGroupsSelectListItems(model.Project2Guid, group2Id.GetValueOrDefault());
-
-            if (group1Id.HasValue && group2Id.HasValue)
-            {
-                model.Group1 = await VariableGroupService.GetVariableGroupAsync(project1Guid.GetValueOrDefault(), group1Id.GetValueOrDefault());
-                model.Group2 = await VariableGroupService.GetVariableGroupAsync(project2Guid.GetValueOrDefault(), group2Id.GetValueOrDefault());
+                model.Group1 = await VariableGroupService.GetVariableGroupAsync(model.Project1Guid.GetValueOrDefault(), model.Group1Id.GetValueOrDefault());
+                model.Group2 = await VariableGroupService.GetVariableGroupAsync(model.Project2Guid.GetValueOrDefault(), model.Group2Id.GetValueOrDefault());
                 model.Results = Comparer.Compare(model.Group1, model.Group2);
             }
 
@@ -179,38 +146,53 @@ namespace TeamServicesTools.Web.Controllers
         }
 
         [TokenRequired]
-        public async Task<ActionResult> AddVariable(Guid? projectGuid, string groupIds, string projectName)
+        public async Task<ActionResult> AddGroup(AddGroupModel model)
         {
-            if (!projectGuid.HasValue)
+            if (!model.ProjectGuid.HasValue)
                 return Redirect("/Home");
-
-            var ids = groupIds.Split(',').Select(t => Convert.ToInt32(t));
-
-            var model = new AddVariableModel
-            {
-                ProjectGuid = projectGuid.GetValueOrDefault(),
-                ProjectName = projectName,
-                GroupIds = groupIds.Split(',').Select(t => Convert.ToInt32(t)).ToArray(),
-                Groups = (await VariableGroupService.GetVariableGroupsAsync(projectGuid.GetValueOrDefault()))
-                    .Where(g => ids.Contains(g.Id)),
-                Projects = await GetProjectsSelectListItems(Guid.Empty)
-            };
 
             return View(model);
         }
 
-        [TokenRequired, HttpPost]
-        public async Task<ActionResult> AddVariable(Guid? projectGuid, string groupIds, string key, string value, bool isSecret)
+        [TokenRequired, HttpPost, ActionName("AddGroup")]
+        public async Task<ActionResult> AddGroup_Post(AddGroupModel model)
         {
-            if (!projectGuid.HasValue)
+            if (!model.ProjectGuid.HasValue)
                 return Redirect("/Home");
 
-            foreach (var id in groupIds.Split(',').Select(i => Convert.ToInt32(i)))
-                await VariableGroupService.AddVariableValue(projectGuid.GetValueOrDefault(), id, key, value, isSecret);
+            // TODO
 
-            var projectName = (await ProjectService.GetProjectAsync(projectGuid.GetValueOrDefault())).Name;
+            var projectName = (await ProjectService.GetProjectAsync(model.ProjectGuid.GetValueOrDefault())).Name;
 
-            return Redirect($"/VariableGroups?projectGuid={projectGuid}&projectName={projectName}");
+            return Redirect($"/VariableGroups?ProjectGuid={model.ProjectGuid}&ProjectName={projectName}");
+        }
+
+        [TokenRequired]
+        public async Task<ActionResult> AddVariable(AddVariableModel model)
+        {
+            if (!model.ProjectGuid.HasValue)
+                return Redirect("/Home");
+
+            model.Groups = (await VariableGroupService.GetVariableGroupsAsync(model.ProjectGuid.GetValueOrDefault()))
+                .Where(g => model.GroupIds.Contains(g.Id));
+
+            model.Projects = await GetProjectsSelectListItems(Guid.Empty);
+
+            return View(model);
+        }
+
+        [TokenRequired, HttpPost, ActionName("AddVariable")]
+        public async Task<ActionResult> AddVariable_Post(AddVariableModel model)
+        {
+            if (!model.ProjectGuid.HasValue)
+                return Redirect("/Home");
+
+            foreach (var id in model.GroupIds)
+                await VariableGroupService.AddVariableValue(model.ProjectGuid.GetValueOrDefault(), id, model.Key, model.Value, model.IsSecret);
+
+            var projectName = (await ProjectService.GetProjectAsync(model.ProjectGuid.GetValueOrDefault())).Name;
+
+            return Redirect($"/VariableGroups?ProjectGuid={model.ProjectGuid}&ProjectName={projectName}");
         }
 
         private static IEnumerable<int> GetFormGroupIdList(NameValueCollection form, string prefix)

@@ -19,12 +19,12 @@
     {
     <tr>
         <td>
-            @Html.ActionLink(item.Name, "Project", new { projectGuid = item.Id })
+            @Html.ActionLink(item.Name, "Project", new { ProjectGuid = item.Id })
         </td>
         <td>
-            @Html.ActionLink("Task Groups", "Index", "TaskGroups", new { projectGuid = item.Id, projectName = item.Name }, null)
+            @Html.ActionLink("Task Groups", "Index", "TaskGroups", new { ProjectGuid = item.Id, ProjectName = item.Name }, null)
             &nbsp;|&nbsp;
-            @Html.ActionLink("Variable Groups", "Index", "VariableGroups", new { projectGuid = item.Id, projectName = item.Name }, null)
+            @Html.ActionLink("Variable Groups", "Index", "VariableGroups", new { ProjectGuid = item.Id, ProjectName = item.Name }, null)
             &nbsp;|&nbsp;
             <a href="@item.Url" target="_blank">View in VSTS</a>
         </td>

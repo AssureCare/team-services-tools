@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using TeamServicesTools.Web.Models.ProjectCollections;
 using TeamServicesTools.Web.Services;
 
 namespace TeamServicesTools.Web.Controllers
@@ -15,15 +15,15 @@ namespace TeamServicesTools.Web.Controllers
         }
 
         [TokenRequired]
-        public async Task<ActionResult> ProjectCollection(Guid? projectCollectionGuid)
+        public async Task<ActionResult> ProjectCollection(ProjectCollectionModel model)
         {
-            if (!projectCollectionGuid.HasValue)
+            if (!model.ProjectCollectionGuid.HasValue)
                 return Redirect("/Home");
 
-            var projectCollection = (await ProjectCollectionService.GetProjectCollectionsAsync())
-                .Single(pc => pc.Id.Equals(projectCollectionGuid));
+            model.ProjectCollection = (await ProjectCollectionService.GetProjectCollectionsAsync())
+                .Single(pc => pc.Id.Equals(model.ProjectCollectionGuid));
 
-            return View(projectCollection);
+            return View(model);
         }
     }
 }

@@ -18,53 +18,65 @@
         return $('input[type=checkbox]:checked').map(function () { return this.id.split('_')[1] }).get();
     }
 
-    function exportGroups() {
+    function performAction(action) {
         var ids = getCheckedGroupIds();
 
         if (ids.length === 0) {
-            alert('Select at least one group to export.');
+            alert('Please select at least one group.');
             return;
         }
 
-        $("#export-groupIds").val(ids);
-        $('#export-form').submit();
+        $(`#${action}-groupIdList`).val(ids);
+        $(`#${action}-form`).submit();
     }
 
-    function renameGroups() {
-        var ids = getCheckedGroupIds();
+    //function exportGroups() {
+    //    var ids = getCheckedGroupIds();
 
-        if (ids.length === 0) {
-            alert('Select at least one group to rename.');
-            return;
-        }
+    //    if (ids.length === 0) {
+    //        alert('Select at least one group to export.');
+    //        return;
+    //    }
 
-        $("#rename-groupIds").val(ids);
-        $('#rename-form').submit();
-    }
+    //    $("#export-groupIds").val(ids);
+    //    $('#export-form').submit();
+    //}
 
-    function cloneGroups() {
-        var ids = getCheckedGroupIds();
+    //function renameGroups() {
+    //    var ids = getCheckedGroupIds();
 
-        if (ids.length === 0) {
-            alert('Select at least one group to clone.');
-            return;
-        }
+    //    if (ids.length === 0) {
+    //        alert('Select at least one group to rename.');
+    //        return;
+    //    }
 
-        $("#clone-groupIds").val(ids);
-        $('#clone-form').submit();
-    }
+    //    $("#rename-groupIds").val(ids);
+    //    $('#rename-form').submit();
+    //}
 
-    function addVariableToGroups() {
-        var ids = getCheckedGroupIds();
+    //function cloneGroups() {
+    //    var ids = getCheckedGroupIds();
 
-        if (ids.length === 0) {
-            alert('Select at least one group to which a variable should be added.');
-            return;
-        }
+    //    if (ids.length === 0) {
+    //        alert('Select at least one group to clone.');
+    //        return;
+    //    }
 
-        $("#add-variable-groupIds").val(ids);
-        $('#add-variable-form').submit();
-    }
+    //    $("#clone-groupIds").val(ids);
+    //    $('#clone-form').submit();
+    //}
+
+    //function addVariableToGroups() {
+    //    var ids = getCheckedGroupIds();
+
+    //    if (ids.length === 0) {
+    //        alert('Select at least one group to which a variable should be added.');
+    //        return;
+    //    }
+
+    //    $("#add-variable-groupIds").val(ids);
+    //    $('#add-variable-form').submit();
+    //}
 
     function selectAll() {
         $('input[type=checkbox]:visible').prop('checked', 'checked');
@@ -87,29 +99,38 @@
 
 </script>
 
-<form id="export-form" action="@Url.Action("Export")" method="post">
-    <input type="hidden" name="projectGuid" value="@Model.ProjectGuid" id="export-projectGuid" />
-    <input type="hidden" name="projectName" value="@Model.ProjectName" />
-    <input type="hidden" name="groupIds" value="" id="export-groupIds" />
-</form>
+@foreach (var action in new[] { "Export", "Rename", "Clone", "AddVariable" })
+{
+    <form id="@action-form" action="@Url.Action(action)" method="@(action.Equals("Export") ? "post" : "get")">
+        <input type="hidden" name="ProjectGuid" value="@Model.ProjectGuid" />
+        <input type="hidden" name="ProjectName" value="@Model.ProjectName" />
+        <input type="hidden" name="GroupIdList" value="" id="@action-groupIdList" />
+    </form>
+}
 
-<form id="rename-form" action="@Url.Action("Rename")" method="get">
-    <input type="hidden" name="projectGuid" value="@Model.ProjectGuid" />
-    <input type="hidden" name="projectName" value="@Model.ProjectName" />
-    <input type="hidden" name="groupIds" value="" id="rename-groupIds" />
-</form>
+@*<form id="export-form" action="@Url.Action("Export")" method="post">
+        <input type="hidden" name="ProjectGuid" value="@Model.ProjectGuid" id="export-ProjectGuid" />
+        <input type="hidden" name="ProjectName" value="@Model.ProjectName" />
+        <input type="hidden" name="GroupIdList" value="" id="export-groupIds" />
+    </form>
 
-<form id="clone-form" action="@Url.Action("Clone")" method="get">
-    <input type="hidden" name="projectGuid" value="@Model.ProjectGuid" />
-    <input type="hidden" name="projectName" value="@Model.ProjectName" />
-    <input type="hidden" name="groupIds" value="" id="clone-groupIds" />
-</form>
+    <form id="rename-form" action="@Url.Action("Rename")" method="get">
+        <input type="hidden" name="ProjectGuid" value="@Model.ProjectGuid" />
+        <input type="hidden" name="ProjectName" value="@Model.ProjectName" />
+        <input type="hidden" name="GroupIdList" value="" id="rename-groupIds" />
+    </form>
 
-<form id="add-variable-form" action="@Url.Action("AddVariable")" method="get">
-    <input type="hidden" name="projectGuid" value="@Model.ProjectGuid" />
-    <input type="hidden" name="projectName" value="@Model.ProjectName" />
-    <input type="hidden" name="groupIds" value="" id="add-variable-groupIds" />
-</form>
+    <form id="clone-form" action="@Url.Action("Clone")" method="get">
+        <input type="hidden" name="ProjectGuid" value="@Model.ProjectGuid" />
+        <input type="hidden" name="ProjectName" value="@Model.ProjectName" />
+        <input type="hidden" name="GroupIdList" value="" id="clone-groupIds" />
+    </form>
+
+    <form id="add-variable-form" action="@Url.Action("AddVariable")" method="get">
+        <input type="hidden" name="ProjectGuid" value="@Model.ProjectGuid" />
+        <input type="hidden" name="ProjectName" value="@Model.ProjectName" />
+        <input type="hidden" name="GroupIdList" value="" id="add-variable-groupIds" />
+    </form>*@
 
 <h2>@ViewBag.Title</h2>
 
@@ -125,12 +146,12 @@
         Group Actions
     </button>
     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="renameGroups()">Rename</a></li>
+        <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="performAction('Rename')">Rename</a></li>
         <li class="divider">&nbsp;</li>
-        <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="cloneGroups()">Clone</a></li>
-        <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="addVariableToGroups()">Add Variable</a></li>
+        <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="performAction('Clone')">Clone</a></li>
+        <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="performAction('AddVariable')">Add Variable</a></li>
         <li class="divider">&nbsp;</li>
-        <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="exportGroups()">Export</a></li>
+        <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="performAction('Export')">Export</a></li>
     </ul>
 </div>
 
@@ -160,7 +181,7 @@ Select
                     @Html.CheckBox($"Checked_{item.Id}", false, new { @class = "checkbox", onchange = "configureBulkActionsButton()" })
                 </td>
                 <td>
-                    @Html.ActionLink(item.Name, "VariableGroup", new { projectGuid = Model.ProjectGuid, projectName = Model.ProjectName, groupId = item.Id })
+                    @Html.ActionLink(item.Name, "VariableGroup", new { Model.ProjectGuid, Model.ProjectName, GroupId = item.Id })
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Variables.Keys.Count)

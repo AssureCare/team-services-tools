@@ -1,6 +1,6 @@
 ﻿@using System.Web.Mvc.Html
 @using TeamServicesTools.Web.Models.VariableGroups
-@model TeamServicesTools.Web.Models.VariableGroups.ComparisonModel
+@model TeamServicesTools.Web.Models.VariableGroups.CompareModel
 
 @{
     ViewBag.Title = "Compare Variable Groups";
@@ -44,7 +44,7 @@
     <div class="form-group">
         <label class="control-label col-md-2">Project</label>
         <div class="col-md-10">
-            @Html.DropDownList("project1Guid", Model.Group1Projects, new { @class = "form-control", onchange = "this.form.submit()" })
+            @Html.DropDownList("Project1Guid", Model.Group1Projects, new { @class = "form-control", onchange = "this.form.submit()" })
         </div>
     </div>
 
@@ -55,7 +55,7 @@
         <div class="form-group">
             <label class="control-label col-md-2">Group</label>
             <div class="col-md-10">
-                @Html.DropDownList("group1Id", Model.Project1Groups, new { @class = "form-control", onchange = "this.form.submit()" })
+                @Html.DropDownList("Group1Id", Model.Project1Groups, new { @class = "form-control", onchange = "this.form.submit()" })
             </div>
         </div>
     }
@@ -68,7 +68,7 @@
     <div class="form-group">
         <label class="control-label col-md-2">Project</label>
         <div class="col-md-10">
-            @Html.DropDownList("project2Guid", Model.Group2Projects, new { @class = "form-control", onchange = "this.form.submit()" })
+            @Html.DropDownList("Project2Guid", Model.Group2Projects, new { @class = "form-control", onchange = "this.form.submit()" })
         </div>
     </div>
 
@@ -79,7 +79,7 @@
         <div class="form-group">
             <label class="control-label col-md-2">Group</label>
             <div class="col-md-10">
-                @Html.DropDownList("group2Id", Model.Project2Groups, new { @class = "form-control", onchange = "this.form.submit()" })
+                @Html.DropDownList("Group2Id", Model.Project2Groups, new { @class = "form-control", onchange = "this.form.submit()" })
             </div>
         </div>
     }
