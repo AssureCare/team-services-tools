@@ -1,7 +1,7 @@
 ﻿@model TeamServicesTools.Web.Models.VariableGroups.AddGroupModel
 
 @{
-    ViewBag.Title = $"Add Variable Group to {ViewBag.ProjectName}";
+    ViewBag.Title = $"Add Variable Group to {Model.ProjectName}";
 }
 
 <style type="text/css">
@@ -17,14 +17,22 @@
 <br />
 <br />
 
-<form action="@Url.Action("AddVariable")" method="post">
+<form action="@Url.Action("AddGroup")" method="post">
     <input type="hidden" name="ProjectGuid" value="@Model.ProjectGuid" />
 
     <div class="form-group">
-        @Html.LabelFor(model => model.GroupName, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.GroupName, new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             @Html.EditorFor(model => model.GroupName, new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.GroupName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.GroupDescription, new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.GroupDescription, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.GroupDescription, "", new { @class = "text-danger" })
         </div>
     </div>
 

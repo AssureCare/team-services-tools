@@ -7,5 +7,6 @@ namespace TeamServicesTools.Web.Models.VariableGroups
         public Guid? ProjectGuid { get; set; }
         public string ProjectName { get; set; }
         public string GroupName { get; set; }
+        public string GroupDescription { get; set; }
     }
 }

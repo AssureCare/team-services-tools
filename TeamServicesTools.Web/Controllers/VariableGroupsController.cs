@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Microsoft.TeamFoundation.DistributedTask.WebApi;
 using Newtonsoft.Json;
 using TeamServicesTools.Web.Models.VariableGroups;
 using TeamServicesTools.Web.Services;
@@ -60,7 +61,7 @@ namespace TeamServicesTools.Web.Controllers
                 await VariableGroupService.CloneGroup(model.SourceProjectGuid.GetValueOrDefault(), id,
                     model.TargetProjectGuid.GetValueOrDefault(), Request.Form[$"groupName_{id}"]);
 
-            var projectName = (await ProjectService.GetProjectAsync(model.TargetProjectGuid.GetValueOrDefault())).Name;
+            var projectName = await ProjectService.GetProjectNameAsync(model.ProjectGuid.GetValueOrDefault());
 
             return Redirect($"/VariableGroups?ProjectGuid={model.TargetProjectGuid}&ProjectName={projectName}");
         }
@@ -86,7 +87,7 @@ namespace TeamServicesTools.Web.Controllers
             foreach (var id in GetFormGroupIdList(Request.Form, "groupName"))
                 await VariableGroupService.RenameGroup(model.ProjectGuid.GetValueOrDefault(), id, Request.Form[$"groupName_{id}"]);
 
-            var projectName = (await ProjectService.GetProjectAsync(model.ProjectGuid.GetValueOrDefault())).Name;
+            var projectName = await ProjectService.GetProjectNameAsync(model.ProjectGuid.GetValueOrDefault());
 
             return Redirect($"/VariableGroups?ProjectGuid={model.ProjectGuid}&ProjectName={projectName}");
         }
@@ -146,7 +147,7 @@ namespace TeamServicesTools.Web.Controllers
         }
 
         [TokenRequired]
-        public async Task<ActionResult> AddGroup(AddGroupModel model)
+        public ActionResult AddGroup(AddGroupModel model)
         {
             if (!model.ProjectGuid.HasValue)
                 return Redirect("/Home");
@@ -160,11 +161,12 @@ namespace TeamServicesTools.Web.Controllers
             if (!model.ProjectGuid.HasValue)
                 return Redirect("/Home");
 
-            // TODO
+            var group = await VariableGroupService.AddVariableGroupAsync(model.ProjectGuid.GetValueOrDefault(),
+                new VariableGroup { Name = model.GroupName, Description = model.GroupDescription });
 
-            var projectName = (await ProjectService.GetProjectAsync(model.ProjectGuid.GetValueOrDefault())).Name;
+            var projectName = await ProjectService.GetProjectNameAsync(model.ProjectGuid.GetValueOrDefault());
 
-            return Redirect($"/VariableGroups?ProjectGuid={model.ProjectGuid}&ProjectName={projectName}");
+            return Redirect($"/VariableGroups/VariableGroup?ProjectGuid={model.ProjectGuid}&ProjectName={projectName}&GroupId={group.Id}");
         }
 
         [TokenRequired]
@@ -188,9 +190,10 @@ namespace TeamServicesTools.Web.Controllers
                 return Redirect("/Home");
 
             foreach (var id in model.GroupIds)
-                await VariableGroupService.AddVariableValue(model.ProjectGuid.GetValueOrDefault(), id, model.Key, model.Value, model.IsSecret);
+                await VariableGroupService.AddVariable(model.ProjectGuid.GetValueOrDefault(), id, model.Key,
+                    new VariableValue { Value = model.Value, IsSecret = model.IsSecret });
 
-            var projectName = (await ProjectService.GetProjectAsync(model.ProjectGuid.GetValueOrDefault())).Name;
+            var projectName = await ProjectService.GetProjectNameAsync(model.ProjectGuid.GetValueOrDefault());
 
             return Redirect($"/VariableGroups?ProjectGuid={model.ProjectGuid}&ProjectName={projectName}");
         }

@@ -20,6 +20,11 @@ namespace TeamServicesTools.Web.Services
             return await ClientService.ProjectHttpClient.GetProject(projectGuid.ToString());
         }
 
+        public static async Task<string> GetProjectNameAsync(Guid projectGuid)
+        {
+            return (await ClientService.ProjectHttpClient.GetProject(projectGuid.ToString()))?.Name;
+        }
+
         public static async Task<List<SelectListItem>> GetProjectSelectListItemsAsync(Guid selectedProjectGuid)
         {
             var items = (await GetProjectsAsync())
