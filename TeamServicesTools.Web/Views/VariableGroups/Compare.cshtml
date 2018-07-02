@@ -1,15 +1,12 @@
 ﻿@using System.Web.Mvc.Html
 @using TeamServicesTools.Web.Models.VariableGroups
-@model TeamServicesTools.Web.Models.VariableGroups.CompareModel
+@model CompareModel
 
 @{
     ViewBag.Title = "Compare Variable Groups";
 }
 
 <style type="text/css">
-
-    table.results {
-    }
 
     table.results td {
         max-width: 50vw;
@@ -25,11 +22,34 @@
     .inline {
         display: inline-block;
     }
+
+    .State {
+        color: #999999;
+        font-weight: normal;
+    }
+
 </style>
+
+<script type="text/javascript">
+
+    function filter(li, state) {
+
+        $('.nav-pills li').removeClass('active');
+        $(li).addClass('active');
+
+        if (state === 'All') {
+            $('.Result').show();
+        } else {
+            $('.Result').hide();
+            $('.Result.' + state).show();
+        }
+    }
+
+</script>
 
 <h2>@ViewBag.Title</h2>
 
-@Html.ActionLink($"{ViewBag.ProjectName} Project", "Index", "Projects", new { }, null)
+@Html.ActionLink($"{ViewBag.ProjectName} Projects", "Index", "Projects", new { }, null)
 
 <br />
 <br />
@@ -94,10 +114,24 @@
 
     <h3>Results</h3>
 
+    <ul class="nav nav-pills">
+        <li onclick="filter(this, 'All')"><a href="javascript:void(0)">All (@(Model.Results.Count))</a></li>
+
+        @foreach (int state in Enum.GetValues(typeof(ComparisonState)))
+        {
+            var count = Model.Results.Count(c => (int)c.State == state);
+            var name = Enum.GetName(typeof(ComparisonState), state);
+            if (count > 0)
+            {
+                <li onclick="filter(this, '@(name)')"><a href="javascript:void(0)">@(name) (@count)</a></li>
+            }
+        }
+
+    </ul>
+
     <br />
 
     <table class="table results">
-        <tr></tr>
 
         @foreach (var item in Model.Results)
         {
@@ -120,11 +154,11 @@
                     break;
             }
 
-            <tr>
+            <tr class="Result @item.State.ToString()">
                 <th>@item.Key</th>
-                <th>@item.State</th>
+                <th class="State">@item.State</th>
             </tr>
-            <tr>
+            <tr class="Result @item.State.ToString()">
                 <td class="@cssClass value">@item.Group1Value</td>
                 <td class="@cssClass value">@item.Group2Value</td>
             </tr>
@@ -135,3 +169,9 @@
 
 <br />
 <br />
+
+<script type="text/javascript">
+
+    $('.nav-pills li:first-child').addClass('active');
+
+</script>

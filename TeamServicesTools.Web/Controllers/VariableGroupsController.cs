@@ -61,7 +61,7 @@ namespace TeamServicesTools.Web.Controllers
                 await VariableGroupService.CloneGroup(model.SourceProjectGuid.GetValueOrDefault(), id,
                     model.TargetProjectGuid.GetValueOrDefault(), Request.Form[$"groupName_{id}"]);
 
-            var projectName = await ProjectService.GetProjectNameAsync(model.ProjectGuid.GetValueOrDefault());
+            var projectName = await ProjectService.GetProjectNameAsync(model.TargetProjectGuid.GetValueOrDefault());
 
             return Redirect($"/VariableGroups?ProjectGuid={model.TargetProjectGuid}&ProjectName={projectName}");
         }
