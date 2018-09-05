@@ -1,4 +1,5 @@
-﻿@model TeamServicesTools.Web.Models.Projects.ProjectModel
+﻿@using TeamServicesTools.Web.Services
+@model TeamServicesTools.Web.Models.Projects.ProjectModel
 
 @{
     ViewBag.Title = $"{Model.Project.Name} Project";
@@ -14,5 +15,5 @@
 <ul>
     <li>@Html.ActionLink("Task Groups", "Index", "TaskGroups", new { ProjectGuid = Model.Project.Id, ProjectName = Model.Project.Name }, null)</li>
     <li>@Html.ActionLink("Variable Groups", "Index", "VariableGroups", new { ProjectGuid = Model.Project.Id, ProjectName = Model.Project.Name }, null)</li>
-    <li><a href="@Model.Project.Url" target="_blank">View in VSTS</a></li>
+    <li><a href="@(SettingsService.GetBaseUrl())@(Model.Project.Name)" target="_blank">View in VSTS</a></li>
 </ul>

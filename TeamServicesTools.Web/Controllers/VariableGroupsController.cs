@@ -9,6 +9,7 @@ using Microsoft.TeamFoundation.DistributedTask.WebApi;
 using Newtonsoft.Json;
 using TeamServicesTools.Web.Models.VariableGroups;
 using TeamServicesTools.Web.Services;
+using TeamServicesTools.Web.Shared;
 
 namespace TeamServicesTools.Web.Controllers
 {
@@ -103,7 +104,7 @@ namespace TeamServicesTools.Web.Controllers
             foreach (var groupId in model.GroupIds)
             {
                 var group = await VariableGroupService.GetVariableGroupAsync(model.ProjectGuid.GetValueOrDefault(), Convert.ToInt32(groupId));
-                var file = $"{RemoveInvalidFileCharacters(group.Name)}.json";
+                var file = $"{FileUtility.RemoveInvalidFileCharacters(group.Name)}.json";
                 System.IO.File.WriteAllText(Path.Combine(directory1, file), JsonConvert.SerializeObject(group, Formatting.Indented));
             }
 
@@ -114,14 +115,6 @@ namespace TeamServicesTools.Web.Controllers
             Directory.Delete(directory1, true);
 
             return File(System.IO.File.OpenRead(archive), "application/zip", friendlyFileName);
-        }
-
-        private static string RemoveInvalidFileCharacters(string input)
-        {
-            return input
-                .ToCharArray()
-                .Where(c => !Path.GetInvalidFileNameChars().Contains(c))
-                .Aggregate(string.Empty, (current, c) => current + c);
         }
 
         [TokenRequired]

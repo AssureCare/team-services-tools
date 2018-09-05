@@ -4,36 +4,146 @@
     ViewBag.Title = $"{Model.ProjectName} Task Groups";
 }
 
-<h2>@ViewBag.Title</h2>
+<style type="text/css">
+    input[type=search] {
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
 
-@Html.ActionLink($"{Model.ProjectName} Project", "Project", "Projects", new { ProjectGuid = Model.ProjectGuid }, null)
+    .action-button {
+        float: left;
+        margin-right: 7px;
+    }
+</style>
 
-<br/>
-<br/>
+<script type="text/javascript">
 
-<table class="table">
-    <tr>
-        <th>
-            Name
-        </th>
-        @*<th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>*@
-        <th></th>
-    </tr>
+    function getCheckedGroupIds() {
+        return $('input[type=checkbox]:checked').map(function () { return this.id.split('_')[1] }).get();
+    }
 
-@foreach (var item in Model.Groups) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        @*<td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>*@
-        <td>
-            @*@Html.ActionLink("Clone", "Index", new {}, null)*@
-        </td>
-    </tr>
+    function performAction(action) {
+        var ids = getCheckedGroupIds();
+
+        if (ids.length === 0) {
+            alert('Please select at least one group.');
+            return;
+        }
+
+        $(`#${action}-groupIdList`).val(ids);
+        $(`#${action}-form`).submit();
+    }
+
+    function selectAll() {
+        $('input[type=checkbox]:visible').prop('checked', 'checked');
+        configureBulkActionsButton();
+    }
+
+    function selectNone() {
+        $('input[type=checkbox]').prop('checked', '');
+        configureBulkActionsButton();
+    }
+
+    function configureBulkActionsButton() {
+        var ids = getCheckedGroupIds();
+        if (ids.length > 0) {
+            $('#dropdownMenuButton').removeClass('disabled');
+        } else {
+            $('#dropdownMenuButton').addClass('disabled');
+        }
+    }
+
+</script>
+
+@foreach (var action in new[] { "Export", "Rename", "Clone" })
+{
+    <form id="@action-form" action="@Url.Action(action)" method="@(action.Equals("Export") ? "post" : "get")">
+        <input type="hidden" name="ProjectGuid" value="@Model.ProjectGuid" />
+        <input type="hidden" name="ProjectName" value="@Model.ProjectName" />
+        <input type="hidden" name="GroupIdList" value="" id="@action-groupIdList" />
+    </form>
 }
 
+<h2>@ViewBag.Title</h2>
+
+@Html.ActionLink($"All Projects", "Index", "Projects", new { }, null)
+&nbsp;|&nbsp;
+@Html.ActionLink($"{Model.ProjectName} Project", "Project", "Projects", new { ProjectGuid = Model.ProjectGuid }, null)
+
+<br />
+<br />
+
+@*<div class="action-button">
+    <a class="btn btn-primary" href="@Url.Action("AddGroup", new { Model.ProjectGuid, Model.ProjectName })">Add Group</a>
+</div>*@
+
+<div class="dropdown action-button" id="action-dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Bulk Actions
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="performAction('Rename')">Rename</a></li>
+        <li class="divider">&nbsp;</li>
+        <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="performAction('Clone')">Clone</a></li>
+        <li class="divider">&nbsp;</li>
+        <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="performAction('Export')">Export</a></li>
+    </ul>
+</div>
+
+<br style="clear: both;" />
+<br />
+
+Select
+<a href="javascript:void(0)" onclick="selectAll()">All</a>
+|
+<a href="javascript:void(0)" onclick="selectNone()">None</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Tasks</th>
+            <th>Created By</th>
+            <th>Version</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.Groups)
+        {
+            <tr>
+                <td>
+                    @Html.CheckBox($"Checked_{item.Id}", false, new { @class = "checkbox", onchange = "configureBulkActionsButton()" })
+                </td>
+                <td>
+                    @*@Html.ActionLink(item.Name, "TaskGroup", new { Model.ProjectGuid, Model.ProjectName, GroupId = item.Id })*@
+                    @item.Name
+                </td>
+                <td>
+                    @item.Tasks.Count
+                </td>
+                <td>
+                    @item.Author
+                </td>
+                <td>
+                    @item.Version
+                </td>
+            </tr>
+        }
+
+    </tbody>
 </table>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('table').DataTable({
+            "paging": false
+        });
+        configureBulkActionsButton();
+    });
+
+</script>

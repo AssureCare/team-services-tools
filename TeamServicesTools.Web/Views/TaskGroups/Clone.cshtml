@@ -1,0 +1,63 @@
+﻿@model TeamServicesTools.Web.Models.TaskGroups.CloneModel
+
+@{
+    ViewBag.Title = $"Clone {ViewBag.ProjectName} Task Groups";
+}
+
+<style type="text/css">
+    input[type=text] {
+        max-width: inherit;
+    }
+</style>
+
+<h2>@ViewBag.Title</h2>
+
+@Html.ActionLink($"{Model.ProjectName} Task Groups", "Index", "TaskGroups", new { Model.ProjectGuid, Model.ProjectName }, null)
+
+<br />
+<br />
+
+<form id="clone-form" action="@Url.Action("Clone")" method="post">
+    <input type="hidden" name="SourceProjectGuid" value="@Model.ProjectGuid" />
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Target Project</label>
+        <div class="col-md-10">
+            @Html.DropDownList("TargetProjectGuid", Model.Projects, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="width: 45%;">Existing Name</th>
+                <th>New Group Name</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model.Groups)
+            {
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @Html.TextBox($"groupName_{item.Id}", item.Name, new { @class = "form-control" })
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+
+</form>

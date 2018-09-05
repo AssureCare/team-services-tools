@@ -187,6 +187,9 @@
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp, Version=106.3.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.106.3.1\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
@@ -298,6 +301,12 @@
     <Compile Include="Models\ProjectCollections\ProjectCollectionModel.cs" />
     <Compile Include="Models\Projects\ProjectModel.cs" />
     <Compile Include="Models\Settings\SettingsModel.cs" />
+    <Compile Include="Models\TaskGroups\BaseTaskGroupModel.cs" />
+    <Compile Include="Models\TaskGroups\CloneModel.cs" />
+    <Compile Include="Models\TaskGroups\ExportModel.cs" />
+    <Compile Include="Models\TaskGroups\RenameModel.cs" />
+    <Compile Include="Models\TaskGroups\TaskGroup41Preview1Collection.cs" />
+    <Compile Include="Models\TaskGroups\TaskGroup41Preview1.cs" />
     <Compile Include="Models\TaskGroups\TaskGroupsModel.cs" />
     <Compile Include="Models\VariableGroups\AddGroupModel.cs" />
     <Compile Include="Models\VariableGroups\AddVariableModel.cs" />
@@ -318,6 +327,8 @@
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\VariableGroupService.cs" />
+    <Compile Include="Shared\FileUtility.cs" />
+    <Compile Include="Shared\TaskGroupCloningUtility.cs" />
     <Compile Include="TokenRequiredAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -411,6 +422,8 @@
     <Content Include="Views\VariableGroups\AddVariable.cshtml" />
     <Content Include="Views\VariableGroups\VariableGroup.cshtml" />
     <Content Include="Views\VariableGroups\AddGroup.cshtml" />
+    <Content Include="Views\TaskGroups\Rename.cshtml" />
+    <Content Include="Views\TaskGroups\Clone.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

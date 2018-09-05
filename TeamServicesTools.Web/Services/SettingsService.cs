@@ -56,5 +56,10 @@ namespace TeamServicesTools.Web.Services
                 ProtectedData.Unprotect(
                     Convert.FromBase64String(data), null, DataProtectionScope.LocalMachine));
         }
+
+        public static string GetBasicAuthorizationValue()
+        {
+            return Convert.ToBase64String(Encoding.ASCII.GetBytes($"{string.Empty}:{GetPersonalAccessToken()}"));
+        }
     }
 }
