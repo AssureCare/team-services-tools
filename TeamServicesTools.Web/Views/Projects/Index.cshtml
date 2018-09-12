@@ -12,7 +12,7 @@
 
 <table class="table">
     <tr>
-        <th style="width: 65%;">Name</th>
+        <th style="width: 50%;">Name</th>
         <th></th>
     </tr>
 
@@ -23,6 +23,8 @@
             @Html.ActionLink(item.Name, "Project", new { ProjectGuid = item.Id })
         </td>
         <td>
+            @Html.ActionLink("Build Definitions", "Index", "BuildDefinitions", new { ProjectGuid = item.Id, ProjectName = item.Name }, null)
+            &nbsp;|&nbsp;
             @Html.ActionLink("Task Groups", "Index", "TaskGroups", new { ProjectGuid = item.Id, ProjectName = item.Name }, null)
             &nbsp;|&nbsp;
             @Html.ActionLink("Variable Groups", "Index", "VariableGroups", new { ProjectGuid = item.Id, ProjectName = item.Name }, null)

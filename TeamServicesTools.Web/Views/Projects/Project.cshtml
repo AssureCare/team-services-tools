@@ -13,6 +13,7 @@
 <br />
 
 <ul>
+    <li>@Html.ActionLink("Build Definitions", "Index", "BuildDefinitions", new { ProjectGuid = Model.Project.Id, ProjectName = Model.Project.Name }, null)</li>
     <li>@Html.ActionLink("Task Groups", "Index", "TaskGroups", new { ProjectGuid = Model.Project.Id, ProjectName = Model.Project.Name }, null)</li>
     <li>@Html.ActionLink("Variable Groups", "Index", "VariableGroups", new { ProjectGuid = Model.Project.Id, ProjectName = Model.Project.Name }, null)</li>
     <li><a href="@(SettingsService.GetBaseUrl())@(Model.Project.Name)" target="_blank">View in VSTS</a></li>

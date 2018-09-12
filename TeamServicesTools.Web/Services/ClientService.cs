@@ -1,4 +1,5 @@
-﻿using Microsoft.TeamFoundation.Core.WebApi;
+﻿using Microsoft.TeamFoundation.Build.WebApi;
+using Microsoft.TeamFoundation.Core.WebApi;
 using Microsoft.TeamFoundation.DistributedTask.WebApi;
 using Microsoft.VisualStudio.Services.Account.Client;
 using Microsoft.VisualStudio.Services.Common;
@@ -18,6 +19,8 @@ namespace TeamServicesTools.Web.Services
         public static ProjectCollectionHttpClient ProjectCollectionHttpClient => GetClient<ProjectCollectionHttpClient>();
 
         public static ProjectHttpClient ProjectHttpClient => GetClient<ProjectHttpClient>();
+
+        public static BuildHttpClient BuildClient => GetClient<BuildHttpClient>();
 
         private static TClient GetClient<TClient>() where TClient : VssHttpClientBase
         {

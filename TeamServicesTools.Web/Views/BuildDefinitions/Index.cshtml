@@ -1,0 +1,185 @@
+﻿@model TeamServicesTools.Web.Models.BuildDefinitions.BuildDefinitionsModel
+
+@{
+    ViewBag.Title = $"{Model.ProjectName} Build Definitions";
+}
+
+<style type="text/css">
+    input[type=search] {
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
+
+    .action-button {
+        float: left;
+        margin-right: 7px;
+    }
+
+    tr.group td {
+        background-color: #d9e6f2 !important;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function getCheckedDefinitionIds() {
+        return $('input[type=checkbox]:checked').map(function () { return this.id.split('_')[1] }).get();
+    }
+
+    function performAction(action) {
+        var ids = getCheckedDefinitionIds();
+
+        if (ids.length === 0) {
+            alert('Please select at least one definition.');
+            return;
+        }
+
+        $(`#${action}-definitionIdList`).val(ids);
+        $(`#${action}-form`).submit();
+    }
+
+    function selectAll() {
+        $('input[type=checkbox]:visible').prop('checked', 'checked');
+        configureBulkActionsButton();
+    }
+
+    function selectNone() {
+        $('input[type=checkbox]').prop('checked', '');
+        configureBulkActionsButton();
+    }
+
+    function configureBulkActionsButton() {
+        var ids = getCheckedDefinitionIds();
+        if (ids.length > 0) {
+            $('#dropdownMenuButton').removeClass('disabled');
+        } else {
+            $('#dropdownMenuButton').addClass('disabled');
+        }
+    }
+
+</script>
+
+@foreach (var action in new[] { "Export", "Rename", "Clone" })
+{
+    <form id="@action-form" action="@Url.Action(action)" method="@(action.Equals("Export") ? "post" : "get")">
+        <input type="hidden" name="ProjectGuid" value="@Model.ProjectGuid" />
+        <input type="hidden" name="ProjectName" value="@Model.ProjectName" />
+        <input type="hidden" name="DefinitionIdList" value="" id="@action-definitionIdList" />
+    </form>
+}
+
+<h2>@ViewBag.Title</h2>
+
+@Html.ActionLink($"All Projects", "Index", "Projects", new { }, null)
+&nbsp;|&nbsp;
+@Html.ActionLink($"{Model.ProjectName} Project", "Project", "Projects", new { ProjectGuid = Model.ProjectGuid }, null)
+
+<br />
+<br />
+
+<div class="dropdown action-button" id="action-dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Bulk Actions
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="performAction('Rename')">Rename</a></li>
+        <li class="divider">&nbsp;</li>
+        <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="performAction('Clone')">Clone</a></li>
+        <li class="divider">&nbsp;</li>
+        <li><a class="dropdown-toggle" href="javascript:void(0)" onclick="performAction('Export')">Export</a></li>
+    </ul>
+</div>
+
+<br style="clear: both;" />
+<br />
+
+Select
+<a href="javascript:void(0)" onclick="selectAll()">All</a>
+|
+<a href="javascript:void(0)" onclick="selectNone()">None</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Queue</th>
+            <th>Status</th>
+            <th>Created By</th>
+            <th>Path</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.Definitions)
+        {
+        <tr>
+            <td>
+                @Html.CheckBox($"Checked_{item.Id}", false, new { @class = "checkbox", onchange = "configureBulkActionsButton()" })
+            </td>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                @item.Queue.Name
+            </td>
+            <td>
+                @item.QueueStatus
+            </td>
+            <td>
+                @item.AuthoredBy.DisplayName
+            </td>
+            <td>
+                @item.Path
+            </td>
+        </tr>
+        }
+
+    </tbody>
+</table>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        var groupColumn = 5;
+        var table = $('table').DataTable({
+            "paging": false,
+            "columnDefs": [
+                { "visible": false, "targets": groupColumn }
+            ],
+            "order": [[ groupColumn, 'asc' ]],
+            "displayLength": 25,
+            "drawCallback": function ( settings ) {
+                var api = this.api();
+                var rows = api.rows( {page:'current'} ).nodes();
+                var last=null;
+ 
+                api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
+                    if ( last !== group ) {
+                        $(rows).eq( i ).before(
+                            '<tr class="group"><td colspan="5">'+group+'</td></tr>'
+                        );
+ 
+                        last = group;
+                    }
+                } );
+            }
+        } );
+ 
+        // Order by the grouping
+        $('#example tbody').on( 'click', 'tr.group', function () {
+            var currentOrder = table.order()[0];
+            if ( currentOrder[0] === groupColumn && currentOrder[1] === 'asc' ) {
+                table.order( [ groupColumn, 'desc' ] ).draw();
+            }
+            else {
+                table.order( [ groupColumn, 'asc' ] ).draw();
+            }
+        } );
+
+        configureBulkActionsButton();
+    } );
+
+</script>

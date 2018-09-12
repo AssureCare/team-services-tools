@@ -86,7 +86,7 @@ namespace TeamServicesTools.Web.Services
         public static async Task CloneGroup(Guid sourceProjectGuid, Guid groupId, Guid targetProjectGuid, string clonedName)
         {
             var group = await GetTaskGroupAsync(sourceProjectGuid, groupId);
-            var clonedGroup = TaskGroupCloningUtility.Clone(group);
+            var clonedGroup = CloningUtility.Clone(group);
 
             clonedGroup.Id = Guid.NewGuid();
             clonedGroup.Version = new TaskVersion("1.0.0");
