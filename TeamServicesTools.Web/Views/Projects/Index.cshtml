@@ -1,6 +1,14 @@
 ﻿@using TeamServicesTools.Web.Services
 @model IEnumerable<Microsoft.TeamFoundation.Core.WebApi.TeamProjectReference>
 
+<style type="text/css">
+
+    table.expanded td {
+        padding: 25px !important;
+    }
+
+</style>
+
 @{
     ViewBag.Title = "Projects";
 }
@@ -10,9 +18,9 @@
 <br />
 <br />
 
-<table class="table">
+<table class="table expanded">
     <tr>
-        <th style="width: 50%;">Name</th>
+        <th style="width: 40%;">Name</th>
         <th></th>
     </tr>
 
@@ -20,16 +28,18 @@
     {
     <tr>
         <td>
-            @Html.ActionLink(item.Name, "Project", new { ProjectGuid = item.Id })
+            <a href="@Url.Action("Project", "Projects", new {ProjectGuid = item.Id})"><i class="ms-Icon ms-Icon--ProjectCollection" aria-hidden="true"></i>&nbsp;@item.Name</a>
         </td>
         <td>
-            @Html.ActionLink("Build Definitions", "Index", "BuildDefinitions", new { ProjectGuid = item.Id, ProjectName = item.Name }, null)
+            <a href="@Url.Action("Index", "BuildDefinitions", new {ProjectGuid = item.Id, ProjectName = item.Name})"><i class="ms-Icon ms-Icon--Build" aria-hidden="true"></i>&nbsp;Builds</a>
             &nbsp;|&nbsp;
-            @Html.ActionLink("Task Groups", "Index", "TaskGroups", new { ProjectGuid = item.Id, ProjectName = item.Name }, null)
+            <a href="@Url.Action("Index", "ReleaseDefinitions", new {ProjectGuid = item.Id, ProjectName = item.Name})"><i class="ms-Icon ms-Icon--Rocket" aria-hidden="true"></i>&nbsp;Releases</a>
             &nbsp;|&nbsp;
-            @Html.ActionLink("Variable Groups", "Index", "VariableGroups", new { ProjectGuid = item.Id, ProjectName = item.Name }, null)
+            <a href="@Url.Action("Index", "TaskGroups", new {ProjectGuid = item.Id, ProjectName = item.Name})"><i class="ms-Icon ms-Icon--TaskGroup" aria-hidden="true"></i>&nbsp;Task Groups</a>
             &nbsp;|&nbsp;
-            <a href="@(SettingsService.GetBaseUrl())@(item.Name)" target="_blank">View in VSTS</a>
+            <a href="@Url.Action("Index", "VariableGroups", new {ProjectGuid = item.Id, ProjectName = item.Name})"><i class="ms-Icon ms-Icon--Library" aria-hidden="true"></i>&nbsp;Variable Groups</a>
+            &nbsp;|&nbsp;
+            <a href="@(SettingsService.GetBaseUrl())@(item.Name)" target="_blank"><i class="ms-Icon ms-Icon--OpenInNewWindow" aria-hidden="true"></i>&nbsp;View in VSTS</a>
         </td>
     </tr>
     }

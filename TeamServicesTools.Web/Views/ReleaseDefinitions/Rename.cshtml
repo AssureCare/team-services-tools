@@ -1,0 +1,52 @@
+﻿@model TeamServicesTools.Web.Models.ReleaseDefinitions.RenameModel
+
+@{
+    ViewBag.Title = $"Rename {ViewBag.ProjectName} Release Definitions";
+}
+
+<style type="text/css">
+    input[type=text] {
+        max-width: inherit;
+    }
+</style>
+
+
+<h2>@ViewBag.Title</h2>
+
+@Html.ActionLink($"{Model.ProjectName} Release Definitions", "Index", "ReleaseDefinitions", new { Model.ProjectGuid, Model.ProjectName }, null)
+
+<br />
+<br />
+
+<form id="rename-form" action="@Url.Action("Rename")" method="post">
+    <input type="hidden" name="ProjectGuid" value="@Model.ProjectGuid" />
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="width: 45%;">Existing Name</th>
+                <th>New Name</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model.Definitions)
+            {
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @Html.TextBox($"definitionName_{item.Id}", item.Name, new { @class = "form-control" })
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+
+</form>

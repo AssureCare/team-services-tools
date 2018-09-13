@@ -1,7 +1,7 @@
-﻿@model TeamServicesTools.Web.Models.BuildDefinitions.BuildDefinitionsModel
+﻿@model TeamServicesTools.Web.Models.ReleaseDefinitions.ReleaseDefinitionsModel
 
 @{
-    ViewBag.Title = $"{Model.ProjectName} Build Definitions";
+    ViewBag.Title = $"{Model.ProjectName} Release Definitions";
 }
 
 <style type="text/css">
@@ -104,9 +104,8 @@ Select
         <tr>
             <th></th>
             <th>Name</th>
-            <th>Queue</th>
-            <th>Status</th>
-            <th>Created By</th>
+            <th>Modified By</th>
+            <th>Modified On</th>
             <th>Path</th>
         </tr>
     </thead>
@@ -122,13 +121,10 @@ Select
                 @item.Name
             </td>
             <td>
-                @item.Queue.Name
+                @item.ModifiedBy.DisplayName
             </td>
             <td>
-                @item.QueueStatus
-            </td>
-            <td>
-                @item.AuthoredBy.DisplayName
+                @item.ModifiedOn.ToShortDateString()
             </td>
             <td>
                 @item.Path
@@ -143,7 +139,7 @@ Select
 <script type="text/javascript">
 
     $(document).ready(function() {
-        var groupColumn = 5;
+        var groupColumn = 4;
         var table = $('table').DataTable({
             "paging": false,
             "columnDefs": [

@@ -1,6 +1,19 @@
 ﻿@using TeamServicesTools.Web.Services
 @model TeamServicesTools.Web.Models.Projects.ProjectModel
 
+<style type="text/css">
+
+    .actions li {
+        list-style-type: none;
+        width: 300px;
+        height: 45px;
+        border: 1px solid #e0e0e0;
+        margin-top: 15px;
+        padding: 12px;
+    }
+
+</style>
+
 @{
     ViewBag.Title = $"{Model.Project.Name} Project";
 }
@@ -12,9 +25,13 @@
 <br />
 <br />
 
-<ul>
-    <li>@Html.ActionLink("Build Definitions", "Index", "BuildDefinitions", new { ProjectGuid = Model.Project.Id, ProjectName = Model.Project.Name }, null)</li>
-    <li>@Html.ActionLink("Task Groups", "Index", "TaskGroups", new { ProjectGuid = Model.Project.Id, ProjectName = Model.Project.Name }, null)</li>
-    <li>@Html.ActionLink("Variable Groups", "Index", "VariableGroups", new { ProjectGuid = Model.Project.Id, ProjectName = Model.Project.Name }, null)</li>
-    <li><a href="@(SettingsService.GetBaseUrl())@(Model.Project.Name)" target="_blank">View in VSTS</a></li>
+<ul class="actions">
+    <li><a href="@Url.Action("Index", "BuildDefinitions", new {ProjectGuid = Model.Project.Id, ProjectName = Model.Project.Name})"><i class="ms-Icon ms-Icon--Build" aria-hidden="true"></i>&nbsp;Builds</a></li>
+    <li><a href="@Url.Action("Index", "ReleaseDefinitions", new {ProjectGuid = Model.Project.Id, ProjectName = Model.Project.Name})"><i class="ms-Icon ms-Icon--Rocket" aria-hidden="true"></i>&nbsp;Releases</a></li>
+    <li><a href="@Url.Action("Index", "TaskGroups", new {ProjectGuid = Model.Project.Id, ProjectName = Model.Project.Name})"><i class="ms-Icon ms-Icon--TaskGroup" aria-hidden="true"></i>&nbsp;Task Groups</a></li>
+    <li><a href="@Url.Action("Index", "VariableGroups", new {ProjectGuid = Model.Project.Id, ProjectName = Model.Project.Name})"><i class="ms-Icon ms-Icon--Library" aria-hidden="true"></i>&nbsp;Variable Groups</a></li>
+    <li><a href="@(SettingsService.GetBaseUrl())@(Model.Project.Name)" target="_blank"><i class="ms-Icon ms-Icon--OpenInNewWindow" aria-hidden="true"></i>&nbsp;View in VSTS</a></li>
 </ul>
+
+<br/
+    >

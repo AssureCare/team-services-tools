@@ -289,6 +289,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ReleaseDefinitionsController.cs" />
     <Compile Include="Controllers\BuildDefinitionsController.cs" />
     <Compile Include="Controllers\TaskGroupsController.cs" />
     <Compile Include="Controllers\VariableGroupsController.cs" />
@@ -299,6 +300,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ReleaseDefinitions\BaseReleaseDefinitionModel.cs" />
+    <Compile Include="Models\ReleaseDefinitions\BuildDefinitionsModel.cs" />
+    <Compile Include="Models\ReleaseDefinitions\CloneModel.cs" />
+    <Compile Include="Models\ReleaseDefinitions\ExportModel.cs" />
+    <Compile Include="Models\ReleaseDefinitions\RenameModel.cs" />
     <Compile Include="Models\BuildDefinitions\BaseBuildDefinitionModel.cs" />
     <Compile Include="Models\BuildDefinitions\BuildDefinitionsModel.cs" />
     <Compile Include="Models\BuildDefinitions\CloneModel.cs" />
@@ -306,6 +312,7 @@
     <Compile Include="Models\BuildDefinitions\RenameModel.cs" />
     <Compile Include="Models\ProjectCollections\ProjectCollectionModel.cs" />
     <Compile Include="Models\Projects\ProjectModel.cs" />
+    <Compile Include="Models\ReleaseDefinitions\RestApiModels.cs" />
     <Compile Include="Models\Settings\SettingsModel.cs" />
     <Compile Include="Models\TaskGroups\BaseTaskGroupModel.cs" />
     <Compile Include="Models\TaskGroups\CloneModel.cs" />
@@ -327,8 +334,9 @@
     <Compile Include="Models\VariableGroups\VariableGroupModel.cs" />
     <Compile Include="Models\VariableGroups\VariableGroupsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ClientService.cs" />
     <Compile Include="Services\BuildDefinitionsService.cs" />
+    <Compile Include="Services\ClientService.cs" />
+    <Compile Include="Services\ReleaseDefinitionsService.cs" />
     <Compile Include="Services\TaskGroupService.cs" />
     <Compile Include="Services\ProjectCollectionService.cs" />
     <Compile Include="Services\ProjectService.cs" />
@@ -434,6 +442,9 @@
     <Content Include="Views\BuildDefinitions\Index.cshtml" />
     <Content Include="Views\BuildDefinitions\Rename.cshtml" />
     <Content Include="Views\BuildDefinitions\Clone.cshtml" />
+    <Content Include="Views\ReleaseDefinitions\Clone.cshtml" />
+    <Content Include="Views\ReleaseDefinitions\Index.cshtml" />
+    <Content Include="Views\ReleaseDefinitions\Rename.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

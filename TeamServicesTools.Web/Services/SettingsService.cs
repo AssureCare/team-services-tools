@@ -19,6 +19,11 @@ namespace TeamServicesTools.Web.Services
             return new Uri($"https://{GetSettings().AccountName}.visualstudio.com");
         }
 
+        public static Uri GetReleaseManagementBaseUrl()
+        {
+            return new Uri($"https://vsrm.dev.azure.com/{GetSettings().AccountName}");
+        }
+
         public static string GetPersonalAccessToken()
         {
             return GetSettings().PersonalAccessToken;
