@@ -4,8 +4,13 @@ using TeamServicesTools.Web.Services;
 
 namespace TeamServicesTools.Web
 {
+    /// <summary>
+    /// Indicates that an authentication token is required to use the controller action.
+    /// </summary>
+    // ReSharper disable once InheritdocConsiderUsage
     public class TokenRequiredAttribute : ActionFilterAttribute
     {
+        /// <inheritdoc />
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
